@@ -28,3 +28,6 @@ variable "default_tags" {
                 Managed = "RG"
             }
 }
+
+variable "ec2count" {}
+  

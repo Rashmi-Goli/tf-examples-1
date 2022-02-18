@@ -38,7 +38,8 @@ resource "aws_instance" "rg-server1"{
   subnet_id = var.subnet #FFXsubnet2
   associate_public_ip_address = var.publicip
   key_name = var.keyname
-
+  count = var.ec2count
+ 
 
   vpc_security_group_ids = [
     aws_security_group.project-rg-sg.id
@@ -49,7 +50,13 @@ resource "aws_instance" "rg-server1"{
     volume_size = 50
     volume_type = "gp2"
   }
-  tags = var.default_tags
+  tags =  merge(
+    var.default_tags,
+    {
+      "Name" = "RG-SERVER-${count.index+1}"
+    }
+  )
+  # var.default_tags
   depends_on = [ aws_security_group.project-rg-sg ]
 }
 
@@ -83,7 +90,7 @@ resource "aws_instance" "rg-server1"{
 
 
 output "ec2instance" {
-  value = aws_instance.rg-server1.public_ip
+  value = aws_instance.rg-server1[0].public_ip
 }
 
 
